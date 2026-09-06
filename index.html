@@ -13,6 +13,7 @@
 
   /* ── Tokens: light ── */
   :root {
+    --body-font-size: 0.8rem;
     --bg:        #FFFFFF;
     --bg-soft:   #F7F6F3;
     --text:      #18171A;
@@ -52,7 +53,7 @@
     background: var(--bg);
     color: var(--text);
     font-family: var(--f-sans);
-    font-size: 0.8rem;
+    font-size: var(--body-font-size, 0.8rem);
     line-height: 1.7;
   }
 
@@ -952,6 +953,19 @@
 </footer>
 
 <script>
+  // Auto-adjust font size based on device pixel ratio
+  // Mac Retina (DPR≈2) renders fonts visually smaller; Windows (DPR≈1) renders larger.
+  (function() {
+    var dpr = window.devicePixelRatio || 1;
+    var base = 0.8; // rem, looks good on Mac Retina
+    // Scale down proportionally for lower-DPI screens
+    // DPR=2 → 0.8rem, DPR=1.25 → ~0.65rem, DPR=1 → ~0.56rem
+    var scale = Math.min(1, 0.5 + dpr * 0.25);
+    var adjusted = (base * scale).toFixed(3);
+    document.documentElement.style.setProperty('--body-font-size', adjusted + 'rem');
+  })();
+
+
   function toggleMenu() {
     const nl = document.getElementById('nav-links');
     nl.classList.toggle('open');
